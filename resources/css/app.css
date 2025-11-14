@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+@import '@fullcalendar/common/main.css';
+@import '@fullcalendar/daygrid/main.css';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.jsx';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+:root {
+    font-family: var(--font-sans);
+    background-color: rgb(2 6 23);
+    color: rgb(248 250 252);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+}
+
+#root {
+    min-height: 100vh;
+}
+
+.line-clamp-2,
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.line-clamp-2 {
+    -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+    -webkit-line-clamp: 3;
+}
