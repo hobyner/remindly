@@ -19,11 +19,17 @@ function LoginPage() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setError(null);
+
+        if (!form.email || !form.password) {
+            setError('Email and password are required.');
+            return;
+        }
+
         try {
             await dispatch(loginUser(form)).unwrap();
             navigate('/');
         } catch (err) {
-            setError(err.message ?? 'Unable to login');
+            setError(typeof err === 'string' ? err : err?.message ?? 'Unable to login');
         }
     };
 
@@ -49,7 +55,12 @@ function LoginPage() {
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
             </div>
-            {error && <p className="text-sm text-rose-400">{error}</p>}
+            <div className="flex items-center justify-between text-xs text-slate-400">
+                <Link to="/forgot-password" className="text-indigo-300 hover:text-white">
+                    Forgot password?
+                </Link>
+                <span>{error && <span className="text-rose-400">{error}</span>}</span>
+            </div>
             <button
                 type="submit"
                 disabled={status === 'loading'}

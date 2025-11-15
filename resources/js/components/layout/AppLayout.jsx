@@ -1,13 +1,13 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logoutUser } from '../../store/slices/authSlice';
-import { FiBell, FiCalendar, FiCreditCard, FiHome, FiLogOut, FiSettings, FiTemplate } from 'react-icons/fi';
+import { FiBell, FiCalendar, FiCreditCard, FiHome, FiLogOut, FiSettings, FiFileText } from 'react-icons/fi';
 
 const navItems = [
     { label: 'Dashboard', path: '/', icon: FiHome },
     { label: 'Calendar', path: '/calendar', icon: FiCalendar },
     { label: 'Reminders', path: '/reminders', icon: FiBell },
-    { label: 'Templates', path: '/templates', icon: FiTemplate },
+    { label: 'Templates', path: '/templates', icon: FiFileText },
     { label: 'Billing', path: '/billing', icon: FiCreditCard },
     { label: 'Settings', path: '/settings', icon: FiSettings },
 ];

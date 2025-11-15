@@ -3,14 +3,31 @@ import api from '../../api/client';
 
 const tokenFromStorage = localStorage.getItem('remindly_token');
 
-export const registerUser = createAsyncThunk('auth/register', async (payload) => {
-    const { data } = await api.post('/auth/register', payload);
-    return data;
+const parseApiError = (error) => {
+    if (!error.response) return 'Network error. Check your connection.';
+    const { status, data } = error.response;
+    if (status === 422 && data?.errors) {
+        return Object.values(data.errors).flat().join(' ');
+    }
+    return data?.message ?? 'Unexpected error. Please try again.';
+};
+
+export const registerUser = createAsyncThunk('auth/register', async (payload, { rejectWithValue }) => {
+    try {
+        const { data } = await api.post('/auth/register', payload);
+        return data;
+    } catch (error) {
+        return rejectWithValue(parseApiError(error));
+    }
 });
 
-export const loginUser = createAsyncThunk('auth/login', async (payload) => {
-    const { data } = await api.post('/auth/login', payload);
-    return data;
+export const loginUser = createAsyncThunk('auth/login', async (payload, { rejectWithValue }) => {
+    try {
+        const { data } = await api.post('/auth/login', payload);
+        return data;
+    } catch (error) {
+        return rejectWithValue(parseApiError(error));
+    }
 });
 
 export const fetchProfile = createAsyncThunk('auth/profile', async () => {
@@ -46,7 +63,7 @@ const authSlice = createSlice({
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.payload ?? action.error.message;
             })
             .addCase(loginUser.pending, (state) => {
                 state.status = 'loading';
@@ -61,7 +78,7 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.payload ?? action.error.message;
             })
             .addCase(fetchProfile.pending, (state) => {
                 state.status = 'loading';
