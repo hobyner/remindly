@@ -10,6 +10,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('remindly:dispatch-due')->everyMinute()->withoutOverlapping();
+        $schedule->command('legacy:run-heartbeats')->hourly()->withoutOverlapping();
     }
 
     protected function commands(): void

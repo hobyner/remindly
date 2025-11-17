@@ -1,13 +1,15 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logoutUser } from '../../store/slices/authSlice';
-import { FiBell, FiCalendar, FiCreditCard, FiHome, FiLogOut, FiSettings, FiFileText, FiShield } from 'react-icons/fi';
+import { FiBell, FiCalendar, FiCreditCard, FiHome, FiLogOut, FiSettings, FiFileText, FiShield, FiMenu, FiX, FiUsers } from 'react-icons/fi';
 
 const navItems = [
-    { label: 'Dashboard', path: '/', icon: FiHome },
+    { label: 'Dashboard', path: '/dashboard', icon: FiHome },
     { label: 'Calendar', path: '/calendar', icon: FiCalendar },
     { label: 'Reminders', path: '/reminders', icon: FiBell },
     { label: 'Legacy', path: '/legacy', icon: FiShield },
+    { label: 'Contacts', path: '/contacts', icon: FiUsers },
     { label: 'Templates', path: '/templates', icon: FiFileText },
     { label: 'Billing', path: '/billing', icon: FiCreditCard },
     { label: 'Settings', path: '/settings', icon: FiSettings },
@@ -16,6 +18,7 @@ const navItems = [
 function AppLayout() {
     const dispatch = useAppDispatch();
     const user = useAppSelector((state) => state.auth.user);
+    const [mobileOpen, setMobileOpen] = useState(false);
 
     return (
         <div className="flex min-h-screen bg-slate-950">
@@ -30,7 +33,7 @@ function AppLayout() {
                             <NavLink
                                 key={item.path}
                                 to={item.path}
-                                end={item.path === '/'}
+                                end={item.path === '/dashboard'}
                                 className={({ isActive }) =>
                                     `flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition ${
                                         isActive
@@ -65,6 +68,21 @@ function AppLayout() {
                             <p className="text-base font-semibold text-white">{user?.name}</p>
                         </div>
                         <div className="flex items-center gap-3 text-xs text-slate-400">
+                            {user?.is_admin && (
+                                <Link
+                                    to="/admin"
+                                    className="rounded-full border border-slate-700 px-3 py-1 text-slate-200 transition hover:border-indigo-500 hover:text-white"
+                                >
+                                    Admin
+                                </Link>
+                            )}
+                            <button
+                                type="button"
+                                className="rounded-full border border-slate-700 p-2 text-white lg:hidden"
+                                onClick={() => setMobileOpen(true)}
+                            >
+                                <FiMenu />
+                            </button>
                             <div className="hidden rounded-full border border-slate-800 px-3 py-1 font-semibold text-slate-300 shadow-sm md:block">
                                 {user?.current_plan ?? 'Free Plan'}
                             </div>
@@ -82,6 +100,51 @@ function AppLayout() {
                     <Outlet />
                 </div>
             </main>
+            {mobileOpen && (
+                <div className="fixed inset-0 z-40 bg-slate-950/95 p-6 lg:hidden">
+                    <div className="flex items-center justify-between">
+                        <p className="text-lg font-semibold text-white">BeyondMessage</p>
+                        <button
+                            type="button"
+                            className="rounded-full border border-slate-700 p-2 text-white"
+                            onClick={() => setMobileOpen(false)}
+                        >
+                            <FiX />
+                        </button>
+                    </div>
+                    <div className="mt-8 space-y-3">
+                        {navItems.map((item) => (
+                            <NavLink
+                                key={item.path}
+                                to={item.path}
+                                end={item.path === '/dashboard'}
+                                onClick={() => setMobileOpen(false)}
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 rounded-2xl px-4 py-3 text-base font-medium transition ${
+                                        isActive
+                                            ? 'bg-indigo-500/20 text-white'
+                                            : 'text-slate-300 hover:bg-slate-900 hover:text-white'
+                                    }`
+                                }
+                            >
+                                <item.icon className="text-lg" />
+                                {item.label}
+                            </NavLink>
+                        ))}
+                    </div>
+                    <button
+                        type="button"
+                        className="mt-8 w-full rounded-2xl border border-slate-800 px-4 py-2 text-center text-sm text-slate-200"
+                        onClick={() => {
+                            setMobileOpen(false);
+                            dispatch(logoutUser());
+                        }}
+                    >
+                        <FiLogOut className="mr-2 inline" />
+                        Logout
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

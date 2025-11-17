@@ -22,6 +22,17 @@ Route::middleware(['api'])->group(function (): void {
         Route::post('payments/paystack/initialize', [\App\Http\Controllers\PaymentController::class, 'initialize']);
         Route::post('integrations/meta/verify', [\App\Http\Controllers\IntegrationController::class, 'verifyMetaCredentials']);
         Route::get('integrations/meta/templates', [\App\Http\Controllers\IntegrationController::class, 'listMetaTemplates']);
+
+        Route::apiResource('legacy/messages', \App\Http\Controllers\LegacyMessageController::class);
+        Route::post('legacy/messages/{legacy_message}/arm', [\App\Http\Controllers\LegacyMessageController::class, 'arm']);
+        Route::post('legacy/messages/{legacy_message}/disarm', [\App\Http\Controllers\LegacyMessageController::class, 'disarm']);
+        Route::post('legacy/toggle-pause', [\App\Http\Controllers\LegacyMessageController::class, 'togglePause']);
+
+        Route::prefix('admin')
+            ->middleware('admin')
+            ->group(function (): void {
+                Route::get('overview', [\App\Http\Controllers\Admin\AdminDashboardController::class, 'overview']);
+            });
     });
 });
 

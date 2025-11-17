@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -44,6 +45,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'legacy_paused_at' => 'datetime',
+            'is_admin' => 'boolean',
             'password' => 'hashed',
         ];
     }
@@ -76,5 +79,10 @@ class User extends Authenticatable
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function legacyMessages(): HasMany
+    {
+        return $this->hasMany(LegacyMessage::class);
     }
 }

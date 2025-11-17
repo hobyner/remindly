@@ -6,6 +6,11 @@ export const fetchContacts = createAsyncThunk('contacts/fetch', async (params = 
     return data;
 });
 
+export const createContact = createAsyncThunk('contacts/create', async (payload) => {
+    const { data } = await api.post('/contacts', payload);
+    return data;
+});
+
 const contactsSlice = createSlice({
     name: 'contacts',
     initialState: {
@@ -29,6 +34,10 @@ const contactsSlice = createSlice({
             .addCase(fetchContacts.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
+            })
+            .addCase(createContact.fulfilled, (state, action) => {
+                const contact = action.payload.data ?? action.payload;
+                state.items.unshift(contact);
             });
     },
 });

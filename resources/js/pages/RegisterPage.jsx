@@ -6,7 +6,7 @@ import { registerUser } from '../store/slices/authSlice';
 function RegisterPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { token, status } = useAppSelector((state) => state.auth);
+    const { token, status, user } = useAppSelector((state) => state.auth);
     const [form, setForm] = useState({
         name: '',
         email: '',
@@ -16,10 +16,10 @@ function RegisterPage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (token) {
-            navigate('/', { replace: true });
+        if (token && user) {
+            navigate(user.is_admin ? '/admin' : '/dashboard', { replace: true });
         }
-    }, [token, navigate]);
+    }, [token, user, navigate]);
 
     const passwordStrength = useMemo(() => {
         const value = form.password || '';
@@ -73,8 +73,8 @@ function RegisterPage() {
         }
 
         try {
-            await dispatch(registerUser(form)).unwrap();
-            navigate('/');
+            const result = await dispatch(registerUser(form)).unwrap();
+            navigate(result.user?.is_admin ? '/admin' : '/legacy');
         } catch (err) {
             setError(typeof err === 'string' ? err : err?.message ?? 'Unable to register');
         }

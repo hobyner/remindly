@@ -6,15 +6,15 @@ import { loginUser } from '../store/slices/authSlice';
 function LoginPage() {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { token, status } = useAppSelector((state) => state.auth);
+    const { token, status, user } = useAppSelector((state) => state.auth);
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (token) {
-            navigate('/', { replace: true });
+        if (token && user) {
+            navigate(user.is_admin ? '/admin' : '/dashboard', { replace: true });
         }
-    }, [token, navigate]);
+    }, [token, user, navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -26,8 +26,8 @@ function LoginPage() {
         }
 
         try {
-            await dispatch(loginUser(form)).unwrap();
-            navigate('/');
+            const result = await dispatch(loginUser(form)).unwrap();
+            navigate(result.user?.is_admin ? '/admin' : '/legacy');
         } catch (err) {
             setError(typeof err === 'string' ? err : err?.message ?? 'Unable to login');
         }
