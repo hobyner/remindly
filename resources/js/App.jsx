@@ -13,6 +13,7 @@ import RemindersPage from './pages/RemindersPage';
 import TemplatesPage from './pages/TemplatesPage';
 import SettingsPage from './pages/SettingsPage';
 import BillingPage from './pages/BillingPage';
+import LegacyPage from './pages/LegacyPage';
 
 const PrivateRoute = ({ children }) => {
     const token = useAppSelector((state) => state.auth.token);
@@ -54,6 +55,7 @@ function App() {
                 <Route path="templates" element={<TemplatesPage />} />
                 <Route path="billing" element={<BillingPage />} />
                 <Route path="settings" element={<SettingsPage />} />
+                <Route path="legacy" element={<LegacyPage />} />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

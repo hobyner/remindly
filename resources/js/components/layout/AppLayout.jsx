@@ -1,12 +1,13 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logoutUser } from '../../store/slices/authSlice';
-import { FiBell, FiCalendar, FiCreditCard, FiHome, FiLogOut, FiSettings, FiFileText } from 'react-icons/fi';
+import { FiBell, FiCalendar, FiCreditCard, FiHome, FiLogOut, FiSettings, FiFileText, FiShield } from 'react-icons/fi';
 
 const navItems = [
     { label: 'Dashboard', path: '/', icon: FiHome },
     { label: 'Calendar', path: '/calendar', icon: FiCalendar },
     { label: 'Reminders', path: '/reminders', icon: FiBell },
+    { label: 'Legacy', path: '/legacy', icon: FiShield },
     { label: 'Templates', path: '/templates', icon: FiFileText },
     { label: 'Billing', path: '/billing', icon: FiCreditCard },
     { label: 'Settings', path: '/settings', icon: FiSettings },
@@ -21,8 +22,8 @@ function AppLayout() {
             <aside className="hidden w-64 flex-col justify-between border-r border-slate-900 bg-slate-950/80 p-6 lg:flex">
                 <div>
                     <div className="mb-8">
-                        <div className="text-lg font-semibold tracking-tight text-white">Remindly</div>
-                        <p className="text-sm text-slate-400">Smart reminders + WhatsApp automation</p>
+                        <div className="text-lg font-semibold tracking-tight text-white">BeyondMessage</div>
+                        <p className="text-sm text-slate-400">Legacy messaging + reminder automation</p>
                     </div>
                     <nav className="space-y-2">
                         {navItems.map((item) => (
